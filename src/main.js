@@ -22,7 +22,7 @@ const ui = (pourcent, edit) => {
 
 function main ({DOM, animation}) {
   const click$ = DOM.select('.app').events('click');
-  const timeout$ = DOM.select('.timeout').events('change').tap(e => console.log(e)).pluck('target').pluck('valueAsNumber').startWith(30000).scan((curr, next) => {
+  const timeout$ = DOM.select('.timeout').events('change').pluck('target').pluck('value').startWith(30000).scan((curr, next) => {
     try {
       next = parseInt(next, 10);
       return isNaN(next) ? curr : next;
@@ -30,7 +30,7 @@ function main ({DOM, animation}) {
     catch(e) {
       return curr;
     }
-  }).tap(t => console.log('timeout', t));
+  });
 
   const timer$ = click$.startWith('').withLatestFrom(timeout$, (noop, timeout) => {
     return animation.pluck('delta')
