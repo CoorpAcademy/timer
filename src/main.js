@@ -3,10 +3,19 @@ import {run} from '@cycle/core';
 import {makeDOMDriver, button, div, input} from '@cycle/dom';
 import {makeAnimationDriver} from 'cycle-animation-driver';
 
-const COLOR = '#ff00ff';
-const BACKGROUND_COLOR = '#2f3439';
+const COLORS = [
+  '#2f3439',
+  '#95BF78',
+  '#DA7E00',
+  '#D92626'
+];
 
 const linearGradient = pourcent => {
+  const index = Math.floor(pourcent);
+  let BACKGROUND_COLOR = COLORS[index];
+  const COLOR = COLORS[index + 1];
+  if (pourcent === 1) BACKGROUND_COLOR = COLORS[COLORS.length - 1];
+  pourcent -= index;
   if (pourcent < 0.50)
     return `linear-gradient(90deg, ${BACKGROUND_COLOR} 50%, rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0)), linear-gradient(${90 + (pourcent * 360)}deg, ${COLOR} 50%, ${BACKGROUND_COLOR} 50%, ${BACKGROUND_COLOR})`;
   return `linear-gradient(${90 + (pourcent * 360)}deg, ${COLOR} 50%, rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0)), linear-gradient(270deg, ${COLOR} 50%, ${BACKGROUND_COLOR} 50%, ${BACKGROUND_COLOR})`;
@@ -14,8 +23,7 @@ const linearGradient = pourcent => {
 
 const ui = (pourcent, edit) => {
   return div({style: {
-    height: '100%',
-    width: '100%',
+    borderRadius: '50%',
     backgroundImage: linearGradient(pourcent)
   }}, [edit]);
 };
@@ -35,7 +43,7 @@ function main ({DOM, animation}) {
   const timer$ = click$.startWith('').withLatestFrom(timeout$, (noop, timeout) => {
     return animation.pluck('delta')
       .scan((sum, delta) => sum + delta)
-      .takeWhile(sum => sum < timeout)
+      .takeWhile(sum => sum < timeout * (COLORS.length - 1))
       .concat(Observable.just(timeout))
       .map(delta => delta / timeout);
   }).switch();
