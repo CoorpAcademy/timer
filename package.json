@@ -7,6 +7,7 @@
     "@cycle/core": "^6.0.3",
     "@cycle/dom": "^9.4.0",
     "cycle-animation-driver": "^0.1.4",
+    "lodash": "^4.13.1",
     "rx": "^4.1.0",
     "webpack": "^1.13.1"
   },

@@ -2,6 +2,7 @@ import {Observable} from 'rx';
 import {run} from '@cycle/core';
 import {makeDOMDriver, button, div, input} from '@cycle/dom';
 import {makeAnimationDriver} from 'cycle-animation-driver';
+import {floor, head} from 'lodash/fp';
 
 const COLORS = [
   '#2f3439',
@@ -11,14 +12,14 @@ const COLORS = [
 ];
 
 const linearGradient = pourcent => {
-  const index = Math.floor(pourcent);
-  let BACKGROUND_COLOR = COLORS[index];
-  const COLOR = COLORS[index + 1];
-  if (pourcent === 1) BACKGROUND_COLOR = COLORS[COLORS.length - 1];
-  pourcent -= index;
-  if (pourcent < 0.50)
-    return `linear-gradient(90deg, ${BACKGROUND_COLOR} 50%, rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0)), linear-gradient(${90 + (pourcent * 360)}deg, ${COLOR} 50%, ${BACKGROUND_COLOR} 50%, ${BACKGROUND_COLOR})`;
-  return `linear-gradient(${90 + (pourcent * 360)}deg, ${COLOR} 50%, rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0)), linear-gradient(270deg, ${COLOR} 50%, ${BACKGROUND_COLOR} 50%, ${BACKGROUND_COLOR})`;
+  const level = floor(pourcent);
+  let COLOR = COLORS[level + 1] || head(COLORS);
+  let BACKGROUND_COLOR = COLORS[level];
+
+  const remainder = pourcent % 1;
+  if (remainder > 0.50)
+    return `linear-gradient(${90 + (remainder * 360)}deg, ${COLOR} 50%, rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0)), linear-gradient(270deg, ${COLOR} 50%, ${BACKGROUND_COLOR} 50%, ${BACKGROUND_COLOR})`;
+  return `linear-gradient(90deg, ${BACKGROUND_COLOR} 50%, rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0)), linear-gradient(${90 + (remainder * 360)}deg, ${COLOR} 50%, ${BACKGROUND_COLOR} 50%, ${BACKGROUND_COLOR})`;
 };
 
 const ui = (pourcent, edit) => {
@@ -41,10 +42,11 @@ function main ({DOM, animation}) {
   });
 
   const timer$ = click$.startWith('').withLatestFrom(timeout$, (noop, timeout) => {
+    const latestValue =  timeout * (COLORS.length - 1);
     return animation.pluck('delta')
       .scan((sum, delta) => sum + delta)
-      .takeWhile(sum => sum < timeout * (COLORS.length - 1))
-      .concat(Observable.just(timeout))
+      .takeWhile(sum => sum < latestValue)
+      .concat(Observable.just(latestValue))
       .map(delta => delta / timeout);
   }).switch();
 
