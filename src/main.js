@@ -24,12 +24,15 @@ const linearGradient = pourcent => {
 
 const ui = (pourcent, edit) => {
   return div({style: {
+    width: '90vmin',
+    height: '90vmin',
     borderRadius: '50%',
     backgroundImage: linearGradient(pourcent)
   }}, [edit]);
 };
 
 function main ({DOM, animation}) {
+  console.log('HELLO MAIN');
   const click$ = DOM.select('.app').events('click');
   const timeout$ = DOM.select('.timeout').events('change').pluck('target').pluck('value').startWith(30000).scan((curr, next) => {
     try {
