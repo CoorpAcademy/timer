@@ -1,0 +1,26 @@
+sudo: false
+language: node_js
+node_js:
+- '6'
+cache:
+  directories:
+  - node_modules
+after_success:
+- "./scripts/deploy.sh"
+deploy:
+  skip_cleanup: true
+  provider: script
+  script: scripts/deploy.sh
+  on:
+    branch: master
+env:
+  matrix:
+  - CXX=g++-4.8
+  global:
+    secure: jsFc0h2dksgmAvog6yjgaOJtWy+TgYttPss+oxxfMUY/csUv2dht8lg2dg5KI8ZD+SC1YNfYjlOYSLSUc6x3gHl3QxgON4Ze9FV0bsXCWa45QVMqmBVmAO+h+PkLBvI+FHWz+/tT9Nur1wpYWc/eBgR9EQ+P82HnSVIA9f6P+2z9FqIano5qf4dqVOiSeFdBhLlMwQwTUseIoCMoU7hTqwtE7I/JsCa58964sQdfNX4XJxdbG+1juwy5i4ilth49Pye1mg6XRQ0EpF+ol74MpbZ1bN+ekNtreV/Iiq8icx+3yNMdRkryDdQs1NoKFHKoM4V35SpJZEalLCLOmDW9tqUQJQeP2sYKAX1gkyNQVuqvwbRX6fl5vE4OLSp92edbylhFv5dkAtSdXtEP9W6VVBFVRwFpEo/uxcenWev/mItlXGmNmspb6/DWMQEYH0l2re0e+NvpDairLfLVvqGoK+DtYe6F44s9Y/blBQDaLjlIctGp6p14EFyqBtx72CJ7tPYGDOezBb/O9qpWdy3URDG1ZyRGIBR+VMBgA86Dnc5Y+5Az2euLC1C7/cwOyEYK/q/Go7N1LRUsL464Rst0VC+je2BGM0Vi1FRKYSWVotpj7dAU92k9OyVTh9FH8RQ8DyM6dHLbch011Lihr9Id5KB+RiC5mUd9MstXoTtoPWU=
+addons:
+  apt:
+    sources:
+    - ubuntu-toolchain-r-test
+    packages:
+    - g++-4.8
