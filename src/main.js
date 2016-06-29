@@ -32,7 +32,6 @@ const ui = (pourcent, edit) => {
 };
 
 function main ({DOM, animation}) {
-  console.log('HELLO MAIN');
   const click$ = DOM.select('.app').events('click');
   const timeout$ = DOM.select('.timeout').events('change').pluck('target').pluck('value').startWith(30000).scan((curr, next) => {
     try {
