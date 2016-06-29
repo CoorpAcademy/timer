@@ -24,6 +24,8 @@ const linearGradient = pourcent => {
 
 const ui = (pourcent, edit) => {
   return div({style: {
+    width: '90vmin',
+    height: '90vmin',
     borderRadius: '50%',
     backgroundImage: linearGradient(pourcent)
   }}, [edit]);
