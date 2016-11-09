@@ -4,9 +4,9 @@
   "description": "",
   "main": "webpack.config.js",
   "dependencies": {
-    "@cycle/core": "^6.0.3",
-    "@cycle/dom": "^9.4.0",
-    "cycle-animation-driver": "^0.1.4",
+    "@cycle/core": "^7.0.0",
+    "@cycle/dom": "^14.0.0",
+    "cycle-animation-driver": "^0.3.0",
     "lodash": "^4.13.1",
     "rx": "^4.1.0",
     "webpack": "^1.13.1"
